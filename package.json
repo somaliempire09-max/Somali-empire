@@ -1,0 +1,18 @@
+{
+  "name": "somali-empire-bot",
+  "version": "1.0.0",
+  "description": "Somali Empire Discord Bot - Welcome System + Gang Wars",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.18.0",
+    "uuid": "^11.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
