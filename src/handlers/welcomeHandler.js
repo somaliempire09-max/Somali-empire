@@ -38,6 +38,10 @@ export function buildWelcomePanel() {
   return { embeds: [embed], components: [row1, row2, row3] };
 }
 
+function isValidUrl(url) {
+  try { return /^https?:\/\/.+/.test(url) && Boolean(new URL(url)); } catch { return false; }
+}
+
 export function buildWelcomeEmbed(config, member) {
   const replace = (text) =>
     text
@@ -56,7 +60,7 @@ export function buildWelcomeEmbed(config, member) {
   if (config.embedAuthor)    embed.setAuthor({ name: replace(config.embedAuthor) });
   if (config.embedThumbnail) embed.setThumbnail(member.user.displayAvatarURL());
   if (config.embedTimestamp) embed.setTimestamp();
-  if (config.welcomeImageUrl) embed.setImage(config.welcomeImageUrl);
+  if (config.welcomeImageUrl && isValidUrl(config.welcomeImageUrl)) embed.setImage(config.welcomeImageUrl);
   return embed;
 }
 
@@ -224,11 +228,13 @@ export async function handleWelcomeModal(interaction) {
   }
   if (id === "welcome_modal_image") {
     const url = interaction.fields.getTextInputValue("image_url").trim();
+    if (url && !isValidUrl(url)) return interaction.reply({ content: "❌ URL-ka waa inuu ku bilaabmaa `https://` — waa invalid!\nMisaalo: `https://i.imgur.com/abc.png`", ephemeral: true });
     config.welcomeImageUrl = url || null; updateWelcomeConfig(config);
     return interaction.reply({ content: url ? "🖼️ Image set!" : "🖼️ Image removed!", ephemeral: true });
   }
   if (id === "welcome_modal_background") {
     const url = interaction.fields.getTextInputValue("bg_url").trim();
+    if (url && !isValidUrl(url)) return interaction.reply({ content: "❌ URL-ka waa inuu ku bilaabmaa `https://` — waa invalid!\nMisaalo: `https://i.imgur.com/abc.png`", ephemeral: true });
     config.backgroundUrl = url || null; updateWelcomeConfig(config);
     return interaction.reply({ content: url ? "🌄 Background set!" : "🌄 Background removed!", ephemeral: true });
   }
